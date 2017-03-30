@@ -36,13 +36,13 @@ class WRAPI extends API
                     $result = $category->get_list();
                     break;
                 case "details":
-                    $result = $category->get_details($this->args);
+                    $result = $category->get_details($this->args[0]);
                     break;
                 case "booksbyid":
-                    $result = $category->get_books_byid($this->args);
+                    $result = $category->get_books_byid($this->args[0]);
                     break;
                 case "books":
-                    $result = $category->get_books_byname($this->args);
+                    $result = $category->get_books_byname($this->args[0]);
                     break;
                 default:
                     return "Action ".$this->verb." for category does not exist. Available actions are list, details or books.";

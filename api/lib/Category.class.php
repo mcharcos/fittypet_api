@@ -33,7 +33,7 @@ class CATEGORY
         $db = new DB();
 		
 		$conn = $db->connect_db();
-        $result = pg_query($conn, "select * from category where category_id=".$category_id);
+        $result = pg_query($conn, "select * from category where id=".$category_id);
 	    if (!$result) {
 			error_log( "An error occurred while retrieving category details.\n");
 			return null;
@@ -48,7 +48,7 @@ class CATEGORY
         $db = new DB();
 		
 		$conn = $db->connect_db();
-        $result = pg_query($conn, "select * from category_books where categories_id=".$category_id);
+        $result = pg_query($conn, "select * from category_book where categories_id=".$category_id);
 		
 	    if (!$result) {
 			error_log( "An error occurred while retrieving category books in get_books_byid.\n");
@@ -56,9 +56,9 @@ class CATEGORY
 	    }
 		
 		// For each row of the results, retrieve the book info
-		while($row = do_mysql_fetch_assoc($result)){
+		while($row = pg_fetch_assoc($result)){
 			$result_book = pg_query($conn, "select * from book where id=".$row['books_id']);
-			$firstrow = do_mysql_fetch_assoc($result_book);
+			$firstrow = pg_fetch_assoc($result_book);
 			$array_output[] = $firstrow; //array('book' => $firstrow['name'];	    
 		}
 		return $array_output;
@@ -82,9 +82,9 @@ class CATEGORY
 			return array();
 		}
 		
-		$row = do_mysql_fetch_assoc($result);
+		$row = pg_fetch_assoc($result);
 		
-		return get_books_byid($row['id']);
+		return $this->get_books_byid($row['id']);
 	}
 }
 ?>
