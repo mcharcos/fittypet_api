@@ -17,13 +17,32 @@ The following entrypoints are available:
 
 * /api/v1/category/list - returns the list of categories that exist in the database
 * /api/v1/category/details/[#] - returns the details of a category of id corresponding to the input #
-* /api/v1/category/booksbyid/[#] - returns the list of books that have the category of id corresponding to the input #
-* /api/v1/category/books/[name] - returns the list of books that have the category of name corresponding to the input name
 * /api/v1/books/list - returns the list of books that exist in the database
 * /api/v1/books/details/[#] - returns the details of the book of id corresponding to the input #
 * /api/v1/books/detailsbyuuid/[uuid] - returns the details of the book of uuid corresponding to the input #
+* /api/v1/books/categorybyid/[#] - returns the list of books that have the category of id corresponding to the input #
+* /api/v1/books/category/[name] - returns the list of books that have the category of name corresponding to the input name
 
-All results are return as a json encoded string.
+All results are return as a json encoded string. Additionally, specific fields can be requested by adding fields to the URI. For example, 
+
+* http://mcharcos.heliohost.org/api/v1/books/list?apiKey=1&fields=uuid,title
+
+returns the list of uuids and titles of all books in the database. If requested fields are not correct, an error message will be issued and the result won't show for any of the fields. Valid fields are as follow
+* category:
+ * id
+ * iconcolor
+ * iconurl
+ * name
+ * description
+ * parent_id
+ * listorder
+* books
+ * id
+ * uuid
+ * title
+ * author
+ * language
+ * createtime
 
 Developers
 ==========
