@@ -29,20 +29,20 @@ All results are return as a json encoded string. Additionally, specific fields c
 
 returns the list of uuids and titles of all books in the database. If requested fields are not correct, an error message will be issued and the result won't show for any of the fields. Valid fields are as follow
 * category:
- * id
- * iconcolor
- * iconurl
- * name
- * description
- * parent_id
- * listorder
+  * id
+  * iconcolor
+  * iconurl
+  * name
+  * description
+  * parent_id
+  * listorder
 * books
- * id
- * uuid
- * title
- * author
- * language
- * createtime
+  * id
+  * uuid
+  * title
+  * author
+  * language
+  * createtime
 
 Developers
 ==========
