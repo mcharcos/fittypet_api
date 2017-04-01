@@ -24,7 +24,12 @@ class BOOKS
 			error_log( "An error occurred while retrieving book list.\n");
 			return null;
 	    }
-		return pg_fetch_all($result);
+		
+		$array_output = pg_fetch_all($result);
+	    
+		pg_close($conn);
+		
+		return $array_output;
 	}
 	
 	// This function returns the details of given book
@@ -47,7 +52,11 @@ class BOOKS
 			return null;
 	    }
 		
-		return pg_fetch_all($result);
+		$array_output = pg_fetch_all($result);
+	    
+		pg_close($conn);
+		
+		return $array_output;
 	}
 }
 ?>

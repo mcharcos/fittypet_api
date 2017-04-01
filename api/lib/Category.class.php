@@ -23,7 +23,11 @@ class CATEGORY
 			error_log( "An error occurred while retrieving category list.\n");
 			return null;
 	    }
-		return pg_fetch_all($result);
+		$array_output = pg_fetch_all($result);
+		
+		pg_close($conn);
+		
+		return $array_output;
 	}
 	
 	// This function returns the details of given category
@@ -38,7 +42,11 @@ class CATEGORY
 			error_log( "An error occurred while retrieving category details.\n");
 			return null;
 	    }
-		return pg_fetch_all($result);
+		$array_output = pg_fetch_all($result);
+		
+		pg_close($conn);
+		
+		return $array_output;
 	}
 		
 	// This function returns the books of given category id
@@ -61,6 +69,9 @@ class CATEGORY
 			$firstrow = pg_fetch_assoc($result_book);
 			$array_output[] = $firstrow; //array('book' => $firstrow['name'];	    
 		}
+		
+		pg_close($conn);
+		
 		return $array_output;
 	}
 	
@@ -84,7 +95,23 @@ class CATEGORY
 		
 		$row = pg_fetch_assoc($result);
 		
-		return $this->get_books_byid($row['id']);
+		$result = pg_query($conn, "select * from category_book where categories_id=".$row['id']);
+		
+		if (!$result) {
+			    error_log( "An error occurred while retrieving category books in get_books_byname (by id).\n");
+			    return null;
+		}
+		
+		// For each row of the results, retrieve the book info
+		while($row = pg_fetch_assoc($result)){
+			$result_book = pg_query($conn, "select * from book where id=".$row['books_id']);
+			$firstrow = pg_fetch_assoc($result_book);
+			$array_output[] = $firstrow; //array('book' => $firstrow['name'];	    
+		}
+		
+		pg_close($conn);
+		
+		return $array_output;
 	}
 }
 ?>
