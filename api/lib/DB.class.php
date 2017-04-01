@@ -23,7 +23,7 @@ class DB
 	public function connect_db(){
 		
         $connStr = "host=".$this->host." user=".$this->user." password=".$this->pass." dbname=".$this->db;
-		$connection = pg_connect($connStr);
+		$connection = pg_connect($connStr)  or die("Could not connect to ".$this->host);
         
 		return $connection;
 	}

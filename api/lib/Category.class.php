@@ -6,19 +6,51 @@
 require_once 'DB.class.php';
 class CATEGORY
 {
+    
+    protected $paramsStr;
+    
     public function __construct() {
-		
+	
+	// These are the defined available fields that can be requested by the API
+	$this->paramsStr = array(
+			      'id' => 1,
+			      'iconcolor' => 1,
+			      'iconurl' => 1,
+			      'name' => 1,
+			      'description' => 1,
+			      'parent_id' => 1,
+			      'listorder' => 1
+			     );
+	}
+	
+	// Check if the input fields correspond to columns in the database.
+	// Fields is a string with comma separated column names
+	public function check_fields($fields) {
+	    
+	    if ($fields == "*") {
+		return array('error' => false, 'param' =>'');
+	    }
+	    
+            $fields_arr = explode(',',$fields);
+	    
+	    foreach ($fields_arr as $element) {
+		if (!isset($this->paramsStr[$element])) {
+		    return array('error' => true , 'param' => $element);
+		}
+	    }
+	     return array('error' => false, 'param' =>'');
 	}
 	
 	// This function gets the list of categories
-	public function get_list(){
+	// Assumes fields are correct and will break if not. So use check_fields beforehand to make sure they are
+	public function get_list($fields="*"){
 				
         // Open db instance
         $db = new DB();
 		
 		$conn = $db->connect_db();
 		
-        $result = pg_query($conn, "select * from category"); // should return only a given number of parameters not all
+        $result = pg_query($conn, "select ".$fields." from category"); // should return only a given number of parameters not all
 	    if (!$result) {
 			error_log( "An error occurred while retrieving category list.\n");
 			return null;
@@ -31,13 +63,14 @@ class CATEGORY
 	}
 	
 	// This function returns the details of given category
-	public function get_details($category_id){
+	// Assumes fields are correct and will break if not. So use check_fields beforehand to make sure they are
+	public function get_details($category_id, $fields="*"){
 				
         // Open db instance
         $db = new DB();
 		
 		$conn = $db->connect_db();
-        $result = pg_query($conn, "select * from category where id=".$category_id);
+        $result = pg_query($conn, "select ".$fields." from category where id=".$category_id);
 	    if (!$result) {
 			error_log( "An error occurred while retrieving category details.\n");
 			return null;
@@ -49,69 +82,5 @@ class CATEGORY
 		return $array_output;
 	}
 		
-	// This function returns the books of given category id
-	public function get_books_byid($category_id){
-				
-        // Open db instance
-        $db = new DB();
-		
-		$conn = $db->connect_db();
-        $result = pg_query($conn, "select * from category_book where categories_id=".$category_id);
-		
-	    if (!$result) {
-			error_log( "An error occurred while retrieving category books in get_books_byid.\n");
-			return null;
-	    }
-		
-		// For each row of the results, retrieve the book info
-		while($row = pg_fetch_assoc($result)){
-			$result_book = pg_query($conn, "select * from book where id=".$row['books_id']);
-			$firstrow = pg_fetch_assoc($result_book);
-			$array_output[] = $firstrow; //array('book' => $firstrow['name'];	    
-		}
-		
-		pg_close($conn);
-		
-		return $array_output;
-	}
-	
-	// This function returns the books of given category id
-	public function get_books_byname($category_name){
-				
-        // Open db instance
-        $db = new DB();
-		
-		$conn = $db->connect_db();
-        $result = pg_query($conn, "select * from category where name='".$category_name."'");
-		
-	    if (!$result) {
-			error_log( "An error occurred while retrieving category books in get_books_byname.\n");
-			return null;
-	    }
-		
-		if (pg_num_rows($result) == 0) {
-			return array();
-		}
-		
-		$row = pg_fetch_assoc($result);
-		
-		$result = pg_query($conn, "select * from category_book where categories_id=".$row['id']);
-		
-		if (!$result) {
-			    error_log( "An error occurred while retrieving category books in get_books_byname (by id).\n");
-			    return null;
-		}
-		
-		// For each row of the results, retrieve the book info
-		while($row = pg_fetch_assoc($result)){
-			$result_book = pg_query($conn, "select * from book where id=".$row['books_id']);
-			$firstrow = pg_fetch_assoc($result_book);
-			$array_output[] = $firstrow; //array('book' => $firstrow['name'];	    
-		}
-		
-		pg_close($conn);
-		
-		return $array_output;
-	}
 }
 ?>

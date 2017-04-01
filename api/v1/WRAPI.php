@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/api/lib/Books.class.php';
 class WRAPI extends API
 {
     protected $User;
+    protected $fields;
 
     // Constructor verifies user key since lack of client context in server for api
     public function __construct($request, $origin) {
@@ -24,6 +25,13 @@ class WRAPI extends API
         }
 
         $this->User = $APIKey->getUser();
+        
+        if (!array_key_exists('fields', $this->request)) {
+            $this->fields = "*";
+        } else {
+            $this->fields = $this->request["fields"];
+        }
+        
     }
 
     // Category API
@@ -31,18 +39,18 @@ class WRAPI extends API
         if ($this->method == 'GET' || $this->method == 'POST') {
             $category = new Category();
             
+            $check_res = $category->check_fields($this->fields);
+            
+            if ($check_res['error']) {
+                return "Parameter ".$check_res['param']." is not a valid parameter.";
+            }
+            
             switch($this->verb) {
                 case "list":
-                    $result = $category->get_list();
+                    $result = $category->get_list($this->fields);
                     break;
                 case "details":
-                    $result = $category->get_details($this->args[0]);
-                    break;
-                case "booksbyid":
-                    $result = $category->get_books_byid($this->args[0]);
-                    break;
-                case "books":
-                    $result = $category->get_books_byname($this->args[0]);
+                    $result = $category->get_details($this->args[0], $this->fields);
                     break;
                 default:
                     return "Action ".$this->verb." for category does not exist. Available actions are list, details or books.";
@@ -59,15 +67,28 @@ class WRAPI extends API
         if ($this->method == 'GET' || $this->method == 'POST') {
             
             $book = new Books();
+            
+            $check_res = $book->check_fields($this->fields);
+            
+            if ($check_res['error']) {
+                return "Parameter ".$check_res['param']." is not a valid parameter.";
+            }
+            
             switch($this->verb) {
                 case "list":
-                    $result = $book->get_list();
+                    $result = $book->get_list($this->fields);
                     break;
                 case "details":
-                    $result = $book->get_details($this->args[0], false);
+                    $result = $book->get_details($this->args[0], false, $this->fields);
                     break;
                 case "detailsbyuuid":
-                    $result = $book->get_details($this->args[0], true);
+                    $result = $book->get_details($this->args[0], true, $this->fields);
+                    break;
+                case "categorybyid":
+                    $result = $book->get_books_byid($this->args[0], $this->fields);
+                    break;
+                case "category":
+                    $result = $book->get_books_byname($this->args[0], $this->fields);
                     break;
                 default:
                     return "Action ".$this->verb." for books does not exist. Available actions are list or details.";
