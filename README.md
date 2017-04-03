@@ -21,7 +21,7 @@ The following entrypoints are available:
 * /api/v1/books/details/[#] - returns the details of the book of id corresponding to the input #
 * /api/v1/books/detailsbyuuid/[uuid] - returns the details of the book of uuid corresponding to the input #
 * /api/v1/books/categorybyid/[#] - returns the list of books that have the category of id corresponding to the input #
-* /api/v1/books/category/[name] - returns the list of books that have the category of name corresponding to the input name
+* /api/v1/books/category/[name] - returns the list of books that have the category of name corresponding to the input name. The name has to be a complete match.
 
 All results are return as a json encoded string. Additionally, specific fields can be requested by adding fields to the URI. For example, 
 
