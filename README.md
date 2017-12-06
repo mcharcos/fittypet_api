@@ -1,48 +1,12 @@
-# WRTestAPI
+# FITTYPET API
 
 Introduction
 ============
-This API packages consists of a set of entry points to retrieve data from the WR database about books and categories. The results are returned in JSON format. The first version of the api can be accessed at http://mcharcos.heliohost.org/api/v1/. This document contains information about the API for users and the code for developers. 
+This API packages consists of a set of entry points to retrieve data from the Fittypet database about books, users,... The results are returned in JSON format. 
 
 API definition
 ==============
 
-The API allow to retrieve data about books and categories of books. Accessing to the api will require an API key. Although, the implementation is not develop yet and there is no key management the apiKy is required in the call. Thus, a call will look as:
-
-* http://mcharcos.heliohost.org/api/v1/books/list?apiKey=1
-or 
-* http://mcharcos.heliohost.org/api/v1/books/detailsbyuuid/fab69c13-c538-472c-bc64-5090189d3dc2?apiKey=1
-
-The following entrypoints are available:
-
-* /api/v1/category/list - returns the list of categories that exist in the database
-* /api/v1/category/details/[#] - returns the details of a category of id corresponding to the input #
-* /api/v1/books/list - returns the list of books that exist in the database
-* /api/v1/books/details/[#] - returns the details of the book of id corresponding to the input #
-* /api/v1/books/detailsbyuuid/[uuid] - returns the details of the book of uuid corresponding to the input #
-* /api/v1/books/categorybyid/[#] - returns the list of books that have the category of id corresponding to the input #
-* /api/v1/books/category/[name] - returns the list of books that have the category of name corresponding to the input name. The name has to be a complete match.
-
-All results are return as a json encoded string. Additionally, specific fields can be requested by adding fields to the URI. For example, 
-
-* http://mcharcos.heliohost.org/api/v1/books/list?apiKey=1&fields=uuid,title
-
-returns the list of uuids and titles of all books in the database. If requested fields are not correct, an error message will be issued and the result won't show for any of the fields. Valid fields are as follow
-* category:
-  * id
-  * iconcolor
-  * iconurl
-  * name
-  * description
-  * parent_id
-  * listorder
-* books
-  * id
-  * uuid
-  * title
-  * author
-  * language
-  * createtime
 
 Developers
 ==========
